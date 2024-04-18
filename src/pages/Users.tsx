@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAxios } from "../services/api/useAxios";
 
 type UserType = {
   id: number;
@@ -9,38 +9,39 @@ type UserType = {
 };
 
 export function Users() {
-  //State management
-  const [gitUsers, setGitUsers] = useState<UserType[]>([]);
+  const axios = useAxios();
   const navigate = useNavigate();
 
-  const getGitUsers = async () => {
-    const response = await axios.get("https://api.github.com/users?since=XXXX");
-    console.log(response.data);
-    setGitUsers(response.data);
-    return response.data;
-  };
+  const [gitUsers, setGitUsers] = useState<UserType[]>([]);
+
+  async function getGitUsers() {
+    const users = await axios.get("users", { since: "XXXX"});
+    setGitUsers(users);
+  }
 
   useEffect(() => {
     getGitUsers().catch((e) => console.error(e));
   }, []);
+  
   return (
-    <div style={{ marginTop: "50px" }}>
-      {" "}
-      <div className="users-cont">
+    <div >
+      <div className="m-20 flex justify-center flex-wrap gap-10">
         {gitUsers.map((user) => (
-          <div className="user-card-cont" key={user.id}>
+          <div className="flex w-72 bg-zinc-800 rounded-md overflow-hidden hover:scale-105 transition duration-200 ease-in-out" key={user.id}>
             <img
               src={user.avatar_url}
               alt="userAvatar"
-              className="user-avatar"
+              className="w-40 h-40 rounded-full"
             />
-            <span className="username">{user.login}</span>
-            <button
-              onClick={() => navigate(`/users/user/${user.login}`)}
-              className="view-btn"
-            >
-              View User
-            </button>
+            <div>
+              <span className="text-">{user.login}</span>
+              <button
+                onClick={() => navigate(`/users/user/${user.login}`)}
+                className="view-btn"
+              >
+                View User
+              </button>
+            </div>
           </div>
         ))}
       </div>

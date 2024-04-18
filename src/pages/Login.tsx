@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export function Login({ setIsLogged, setUsername }) {
+type Props = {
+  setIsLogged: (isLogged: boolean) => void;
+  setUsername: (username: string) => void;
+};
+
+export function Login({ setIsLogged, setUsername }: Props) {
   const [loginUsername, setLoginUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");

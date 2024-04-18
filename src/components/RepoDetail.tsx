@@ -1,21 +1,30 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { useAxios } from "../services/api/useAxios";
+
+type GitRepoType = {
+  name: string;
+  owner: {
+    login: string;
+    avatar_url: string;
+  };
+  language: string;
+  html_url: string;
+  clone_url: string;
+};
 
 export function RepoDetail() {
-  const [gitRepoData, setGitRepoData] = useState();
-  const [cloneCopy, setCloneCopy] = useState(false);
+  const axios = useAxios();
   const { name, username } = useParams();
+
+  const [gitRepoData, setGitRepoData] = useState<GitRepoType>();
+  const [cloneCopy, setCloneCopy] = useState(false);
 
   useEffect(() => {
     const getGitUser = async () => {
-      const response = await axios.get(
-        `https://api.github.com/repos/${username}/${name}`
-      );
-      console.log("USER IS HERE", response.data);
-      setGitRepoData(response.data);
-      return response.data;
+      const repos = await axios.get(`repos/${username}/${name}`);
+      setGitRepoData(repos);
     };
     getGitUser().catch((e) => console.error(e));
   }, [username, name]);

@@ -1,26 +1,33 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import "./styles.css";
 import { useParams } from "react-router-dom";
+import { useAxios } from "../services/api/useAxios";
+
+type GitUserData = {
+  avatar_url: string;
+  login: string;
+  name: string;
+  location: string;
+  followers: number;
+  following: number;
+  html_url: string;
+  bio: string;
+};
 
 export function UserProfile() {
-  const [gitUserData, setGitUserData] = useState({});
-
-
   const { username } = useParams();
-  
+  const axios = useAxios();
+
+  const [gitUserData, setGitUserData] = useState<GitUserData>({});
 
   useEffect(() => {
     const getGitUser = async () => {
-      const response = await axios.get(
-        `https://api.github.com/users/${username}`
-      );
-      console.log("USER IS HERE", response.data);
-      setGitUserData(response.data);
-      return response.data;
+      const user = await axios.get(`users/${username}`);
+      setGitUserData(user);
+      return user;
     };
     getGitUser().catch((e) => console.error(e));
-  }, [username]);
+  }, []);
+
   return (
     <div className="user-profile-main-cont">
       <div className="top-cont">

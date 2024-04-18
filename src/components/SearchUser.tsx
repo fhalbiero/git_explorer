@@ -1,26 +1,23 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./styles.css";
+import { useAxios } from "../services/api/useAxios";
 
 export function SearchUser() {
+  const axios = useAxios();
+
   const [username, setUsername] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState("Submit");
   const [attempts, setAttempts] = useState(3);
 
   const navigate = useNavigate();
 
-  const handleGetUser = async (e) => {
-    const response = await axios.get(
-      `https://api.github.com/users/${username}`
-    );
-    if (response.status === 200) {
-      // REDIRECT
+  async function handleGetUser() {
+    const user = await axios.get(`users/${username}`);
+    if (user) {
       navigate(`/users/user/${username}`);
     }
-    return response;
-  };
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,7 +52,7 @@ export function SearchUser() {
           type="text"
           placeholder="Github Surname"
           className="login-inp"
-          onChange={(e) => {
+          onChange={(e: any) => {
             setUsername(e.target.value);
             setErrorMsg(null);
           }}
