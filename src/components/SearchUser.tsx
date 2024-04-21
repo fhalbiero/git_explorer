@@ -30,6 +30,7 @@ export function SearchUser() {
       });
     }
   };
+  
   useEffect(() => {
     if (attempts <= 0) {
       setErrorMsg("Too many attempts, REDIRECTING...");
@@ -38,12 +39,13 @@ export function SearchUser() {
       }, 3000);
     }
   }, [attempts, navigate]);
+
   return (
-    <>
-      <h3>Search User</h3>
-      <form className="login-form" onSubmit={handleSubmit}>
+    <div className="flex flex-col justify-center items-center w-screen h-screen gap-6">
+      <h3 className="">Search User</h3>
+      <form className="flex gap-4" onSubmit={handleSubmit}>
         {errorMsg && (
-          <span style={{ fontSize: "12px", color: "orangered" }}>
+          <span className="">
             {" "}
             {errorMsg}
           </span>
@@ -62,6 +64,6 @@ export function SearchUser() {
           {loading}
         </button>
       </form>
-    </>
+    </div>
   );
 }

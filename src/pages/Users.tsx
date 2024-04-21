@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "../services/api/useAxios";
+import { Button } from "../components/Button";
 
 type UserType = {
   id: number;
@@ -15,7 +16,7 @@ export function Users() {
   const [gitUsers, setGitUsers] = useState<UserType[]>([]);
 
   async function getGitUsers() {
-    const users = await axios.get("users", { since: "XXXX"});
+    const users = await axios.get("users", { since: ""});
     setGitUsers(users);
   }
 
@@ -27,20 +28,21 @@ export function Users() {
     <div >
       <div className="m-20 flex justify-center flex-wrap gap-10">
         {gitUsers.map((user) => (
-          <div className="flex w-72 bg-zinc-800 rounded-md overflow-hidden hover:scale-105 transition duration-200 ease-in-out" key={user.id}>
+          <div 
+            key={user.id}
+            className="flex w-96 bg-zinc-800 rounded-s-full hover:scale-105 transition duration-200 ease-in-out border-2 border-zinc-800 p-1" 
+          >
             <img
               src={user.avatar_url}
               alt="userAvatar"
-              className="w-40 h-40 rounded-full"
+              className="w-36 h-36 rounded-full"
             />
-            <div>
-              <span className="text-">{user.login}</span>
-              <button
+            <div className="flex flex-col flex-1 items-center justify-center gap-6 ml-4" >
+              <span className="text-2xl border-sky-400 font-bold">{user.login}</span>
+              <Button
                 onClick={() => navigate(`/users/user/${user.login}`)}
-                className="view-btn"
-              >
-                View User
-              </button>
+                text="View User"
+              />
             </div>
           </div>
         ))}
