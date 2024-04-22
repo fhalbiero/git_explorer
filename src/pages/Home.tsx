@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAxios } from "../services/api/useAxios";
 import { Link } from "react-router-dom";
 import { Repo } from "../components/Repo";
+import { Loading } from "../components/Loading";
 
 type GitRepoType = {
   id: number;
@@ -13,25 +14,38 @@ type GitRepoType = {
   language: string;
 };
 
-export function Home() {
+function Home() {
   const axios = useAxios();
 
   const [repos, setRepos] = useState<GitRepoType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   async function gitRepos() {
-    const repos = await axios.get("search/repositories", { q: "X"} );
-    setRepos(repos.items);
+    try {
+      setIsLoading(true);
+      const repos = await axios.get("search/repositories", { q: "react"} );
+      if (repos.items.length > 0) {
+        setRepos(repos.items);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   useEffect(() => {
-    gitRepos().catch((e) => console.error(e));
+    gitRepos();      
   }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div>
       <div className="flex items-center justify-center flex-wrap gap-20 p-20 m-auto">
-        {repos ? (
-          repos.map( repo => (
+        {repos?.map( repo => (
             <Repo 
               key={repo.id} 
               id={repo.id} 
@@ -41,11 +55,11 @@ export function Home() {
               language={repo.language}
             />
           ))
-        ) : (
-          <h1>Loading...</h1>
-        )}
+        }
       </div>
       <Link className="p-8 float-end text-sky-400" to="/users">{'Go To Users Page >>'}</Link>
     </div>
   );
 }
+
+export default Home;

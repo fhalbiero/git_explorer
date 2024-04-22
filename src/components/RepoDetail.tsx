@@ -30,8 +30,9 @@ export function RepoDetail() {
   }, [username, name]);
   
   return (
-    <div>
-      <div className="top-cont">
+    
+    <div className="flex justify-center items-center w-screen h-screen bg-slate-400">
+      <div className="flex flex-col bg-zinc-400">
         {gitRepoData ? (
           <>
             <img

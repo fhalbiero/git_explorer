@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "../services/api/useAxios";
 import { Button } from "../components/Button";
+import { Loading } from "../components/Loading";
 
 type UserType = {
   id: number;
@@ -9,25 +10,37 @@ type UserType = {
   avatar_url: string;
 };
 
-export function Users() {
+function Users() {
   const axios = useAxios();
   const navigate = useNavigate();
 
   const [gitUsers, setGitUsers] = useState<UserType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   async function getGitUsers() {
-    const users = await axios.get("users", { since: ""});
-    setGitUsers(users);
+    try {
+      setIsLoading(true);
+      const users = await axios.get("users", { since: "2016"}, true);
+      setGitUsers(users);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   useEffect(() => {
-    getGitUsers().catch((e) => console.error(e));
+    getGitUsers();
   }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
   
   return (
     <div >
       <div className="m-20 flex justify-center flex-wrap gap-10">
-        {gitUsers.map((user) => (
+        {gitUsers?.map((user) => (
           <div 
             key={user.id}
             className="flex w-96 bg-zinc-800 rounded-s-full hover:scale-105 transition duration-200 ease-in-out border-2 border-zinc-800 p-1" 
@@ -50,3 +63,5 @@ export function Users() {
     </div>
   );
 }
+
+export default Users;

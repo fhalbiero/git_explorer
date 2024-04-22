@@ -14,7 +14,8 @@ export function Navbar({ isLogged }: Props) {
         <Link className="hover:text-sky-400" to={"/"}>Repos</Link>
         <Link className="hover:text-sky-400" to={"/users"}>Users</Link>
         <Link className="hover:text-sky-400" to={"/search"}>Search</Link>
-        <Link className="hover:text-sky-400" to={"/authProfile"}>Profile</Link>
+        <Link className="hover:text-sky-400" to={"/auth-profile"}>Profile</Link>
+        <a className="hover:text-sky-400" href="https://fabioalbiero.com">About me</a>
         {!isLogged && <Link className="hover:text-sky-400" to={"/login"}>Login</Link>}
       </div>
     </nav>

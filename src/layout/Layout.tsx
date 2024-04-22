@@ -6,6 +6,7 @@ type Props = {
 };
 
 export function Layout({ isLogged }: Props) {
+
   return (
     <div className="bg-zinc-900 text-gray-200 h-screen w-screen overflow-hidden">
       <Navbar isLogged={isLogged} />
@@ -16,7 +17,7 @@ export function Layout({ isLogged }: Props) {
           scrollbarWidth: 'thin',
           scrollbarColor: '#83858a #262727', 
         }}>
-        <Outlet />
+          <Outlet />
       </div>
     </div>
   );
